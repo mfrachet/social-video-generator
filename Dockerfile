@@ -5,7 +5,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY . .
 RUN npm i -g pnpm
-RUN pnpm Install
+RUN pnpm install
 # If using npm with a `package-lock.json` comment out above and use below instead
 # RUN npm ci
 
@@ -36,7 +36,7 @@ COPY --from=builder /app ./
 
 USER nextjs
 
-CMD ["yarn", "start"]
+CMD ["pnpm", "start"]
 
 # If using npm comment out above and use below instead
 # CMD ["npm", "run", "start"]
