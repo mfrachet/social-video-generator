@@ -32,8 +32,6 @@ RUN npm i -g pnpm
 
 COPY --from=builder /app ./
 
-USER nextjs
-
 CMD ["pnpm", "start"]
 
 # If using npm comment out above and use below instead
