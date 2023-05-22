@@ -1,4 +1,4 @@
-import {MouseEvent, useCallback} from 'react';
+import {MouseEvent, useCallback, useState} from 'react';
 import va from '@vercel/analytics';
 import {TouraineTechProps} from '../../remotion/compositions/showcases/snowcamp/Snowcamp';
 import {ReplayProps} from '../../app/templates/replay/page';
@@ -7,6 +7,7 @@ export const Code: React.FC<{
 	composition: string;
 	params: {[key: string]: string | undefined} | TouraineTechProps | ReplayProps;
 }> = ({params, composition}) => {
+	const [isLoading, setIsLoading] = useState(false);
 	const onClickHandler = useCallback((event: MouseEvent) => {
 		const element = event.target as HTMLElement;
 		const notification = document.querySelector('.notif');
@@ -18,6 +19,24 @@ export const Code: React.FC<{
 			setTimeout(() => notification?.classList.remove('animate-popup'), 2000);
 		}
 	}, []);
+
+	const stringifyed = JSON.stringify(params).replace(/'/g, "'\\''");
+
+	const generateStuff = () => {
+		setIsLoading(true);
+		return fetch(`/api/generate?composition=${composition}`, {
+			method: 'post',
+			body: JSON.stringify(stringifyed),
+		})
+			.then((res) => res.blob())
+			.then((data) => {
+				setIsLoading(false);
+				var a = document.createElement('a');
+				a.href = window.URL.createObjectURL(data);
+				a.download = `${composition}.mp4`;
+				a.click();
+			});
+	};
 
 	return (
 		<>
@@ -34,13 +53,20 @@ export const Code: React.FC<{
 			</p>
 
 			<div className="relative">
+				<button
+					disabled={isLoading}
+					onClick={generateStuff}
+					className="py-2 px-4 bg-slate-900 text-white rounded-lg mb-4 hover:bg-slate-800 active:bg-slate-700"
+				>
+					{isLoading ? 'Loading...' : 'Generate'}
+				</button>
 				<code
 					className=" cursor-pointer rounded-lg block py-3 px-5 break-all text-lg bg-stone-900 hover:bg-stone-700"
 					onClick={onClickHandler}
 				>
 					pnpm remotion render remotion/index.tsx {composition} out/
 					{composition}.mp4 --props=&apos;
-					{JSON.stringify(params).replace(/'/g, "'\\''")}&apos;
+					{stringifyed}&apos;
 				</code>
 				<div className="notif absolute py-2 px-3 bg-amber-300 text-neutral-900 rounded-lg opacity-0 right-0 top-0 pointer-events-none">
 					Command copied in clipboard

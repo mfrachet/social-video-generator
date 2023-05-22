@@ -10,6 +10,6 @@ export const EventLogo = ({style, src}: EventLogoProps) => {
 	return src ? (
 		<Img style={style} src={src} />
 	) : (
-		<Img style={style} src={staticFile('/lyonjs-squared.png')} />
+		<Img style={style} src={staticFile('/strasjs.png')} />
 	);
 };

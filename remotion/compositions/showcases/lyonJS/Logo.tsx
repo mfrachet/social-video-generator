@@ -19,7 +19,7 @@ export const Logo = () => {
 
 	return (
 		<Img
-			src={staticFile('lyonjs-squared.png')}
+			src={staticFile('strasjs.png')}
 			width={150}
 			height="auto"
 			style={{
