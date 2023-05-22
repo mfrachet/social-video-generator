@@ -4,8 +4,8 @@ FROM node:16-alpine AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY . .
-RUN yarn install --frozen-lockfile
-
+RUN npm i -g pnpm
+RUN pnpm Install
 # If using npm with a `package-lock.json` comment out above and use below instead
 # RUN npm ci
 
@@ -30,6 +30,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+RUN npm i -g pnpm
 
 COPY --from=builder /app ./
 
